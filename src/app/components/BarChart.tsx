@@ -18,8 +18,8 @@ const BarChart: React.FC<BarChartProps> = ({ checkedRows }) => {
           x: ids,
           y: prices,
           width: prices.map((price) => {
+            // Thin bar for prices less than 10
             if (price < 10) {
-             // Thin bar for prices less than 10
               return 0.5; 
             } else if (price >= 10 && price <= 20) {
              // Regular width for prices between 10 and 20

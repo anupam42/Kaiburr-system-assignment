@@ -11,7 +11,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [allData, setAllData] = useState<TableRow[]>([]);
   const [currentPageData, setCurrentPageData] = useState<TableRow[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [checkedRows, setCheckedRows] = useState<TableRow[]>([]);
   const [loading, setLoading] = useState(true); // Loading state
