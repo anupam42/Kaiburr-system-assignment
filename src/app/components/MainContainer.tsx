@@ -5,8 +5,9 @@ import DataTable from '../components/DataTable';
 import BarChart from '../components/BarChart';
 import { TableRow } from '../interface/TableRows';
 
-const DataTablePage: React.FC = () => {
+const MainContainer: React.FC = () => {
   const [checkedRows, setCheckedRows] = useState<TableRow[]>([]);
+
 
   const handleCheckboxChange = (checkedData: TableRow[]) => {
     setCheckedRows(checkedData);
@@ -23,4 +24,4 @@ const DataTablePage: React.FC = () => {
   );
 };
 
-export default DataTablePage;
+export default MainContainer;
