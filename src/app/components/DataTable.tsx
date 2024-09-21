@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { TableRow } from '../interface/TableRows';
 import { fetchData } from '../services/dataService';
 import { Pagination, Skeleton } from '@mui/material';
+import dynamic from 'next/dynamic'
+
+const DynamicComponentWithNoSSR = dynamic(
+  () => import('../components/BarChart'),
+  { ssr: false }
+)
 
 interface DataTableProps {
   onCheckboxChange: (checkedRows: TableRow[]) => void;
@@ -154,6 +160,10 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
             color="primary"
           />
         </div>
+      </div>
+
+      <div style={{margin:'5rem'}}>
+     <DynamicComponentWithNoSSR checkedRows={checkedRows} />
       </div>
     </>
   );

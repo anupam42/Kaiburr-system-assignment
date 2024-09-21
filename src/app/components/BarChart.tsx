@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TableRow } from '../interface/TableRows';
 import plotly from 'plotly.js';
 import createPlotComponent from 'react-plotly.js/factory';
@@ -12,6 +12,9 @@ interface BarChartProps {
 const BarChart: React.FC<BarChartProps> = ({ checkedRows }) => {
   const ids = checkedRows.map((row) => row.id);
   const prices = checkedRows.map((row) => row.price);
+  const barColors = useMemo(() => {
+    return ids.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+  }, []);
 
   return (
     <Plot
@@ -34,7 +37,7 @@ const BarChart: React.FC<BarChartProps> = ({ checkedRows }) => {
           }),
           hoverinfo: 'x+y',
           hoverlabel: { bgcolor: '#FFFFFF', font: { size: 12, color: '#000000' } },
-          marker: { color: ids.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`) }
+          marker: { color: barColors }
         }
       ]}
       layout={{
