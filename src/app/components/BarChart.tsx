@@ -49,8 +49,8 @@ const BarChart: React.FC<BarChartProps> = ({ checkedRows }) => {
       layout={{
         title: {
           text: 'Checked Rows Price Chart',
-          font: { size: 24, color: '#4A4A4A' },
-          x: 0.5,
+          font: { size: 15, color: '#4A4A4A' },
+          x: 0.45,
         },
         xaxis: {
           title: {
