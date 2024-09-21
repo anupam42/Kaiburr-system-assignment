@@ -98,7 +98,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
             onSearchChange={(newSearch) => setSearchTerm(newSearch)}
           />
         </div>
-        <div style={{ overflowY: "auto", height: "calc(100% - 4rem)" }}>
+        <div style={{ overflowY: "auto", height: "calc(100% - 4rem)",padding:'.5rem' }}>
           {loading ? (
             <table style={{ width: "100%", tableLayout: "fixed" }}>
               <thead
@@ -177,7 +177,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
           style={{
             display: "flex",
             justifyContent: "flex-end",
-            margin: "1.5rem",
+            margin: "-0.7rem 0.1rem",
           }}
         >
           <Pagination
