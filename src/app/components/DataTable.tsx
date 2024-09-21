@@ -3,6 +3,7 @@ import { TableRow } from '../interface/TableRows';
 import { fetchData } from '../services/dataService';
 import { Pagination, Skeleton } from '@mui/material';
 import dynamic from 'next/dynamic'
+import SearchBar from './SearchBar';
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import('../components/BarChart'),
@@ -80,13 +81,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     <>
       <div style={{ height: 400, width: "100%", marginTop: '5rem', padding:'2rem' }}>
         <div style={{padding:'.5rem',width:"100%"}}>
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-field"
-          />
+          <SearchBar searchTerm={searchTerm} onSearchChange={(newSearch) => setSearchTerm(newSearch)}/>
         </div>
         <div style={{ overflowY: 'auto', height: 'calc(100% - 4rem)' }}>
           {loading ? (
@@ -104,8 +99,8 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
               <tbody>
                 {[...Array(rowsPerPage)].map((_, index) => (
                   <tr key={index}>
-                    <td><Skeleton variant="rectangular" width={24} height={24} /></td>
-                    <td><Skeleton width="100%" /></td>
+                    <td><Skeleton variant="rectangular" width={40} height={24} /></td>
+                    <td><Skeleton width="60%" /></td>
                     <td><Skeleton width="100%" /></td>
                     <td><Skeleton width="100%" /></td>
                     <td><Skeleton width="100%" /></td>
@@ -118,25 +113,25 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
             <table style={{ width: '100%', tableLayout: 'fixed' }}>
               <thead style={{ position: 'sticky', top: 0, backgroundColor: 'white' }}>
                 <tr>
-                  <th>Check</th>
-                  <th>ID</th>
+                  <th style={{ width: '70px' }}>Check</th>
+                  <th style={{ width: '60px' }}>ID</th>
                   <th>Name</th>
                   <th>Category</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
+                  <th style={{ width: '70px' }}>Price</th>
+                  <th style={{ width: '90px' }}>Quantity</th>
                 </tr>
               </thead>
               <tbody>
                 {currentPageData.map((row) => (
                   <tr key={row.id}>
-                    <td>
+                    <td width={40}>
                       <input
                         type="checkbox"
                         checked={row.isChecked}
                         onChange={() => handleCheckboxChange(row.id)}
                       />
                     </td>
-                    <td>{row.id}</td>
+                    <td width={60}>{row.id}</td>
                     <td>{row.name}</td>
                     <td>{row.category}</td>
                     <td>{row.price}</td>
