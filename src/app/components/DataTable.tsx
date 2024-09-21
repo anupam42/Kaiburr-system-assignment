@@ -41,7 +41,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   }, [rowsPerPage]);
 
   // Handle filtered data based on the search term
-  const filteredData = allData.filter((row) =>
+  let filteredData = allData.filter((row) =>
     row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     row.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -55,7 +55,12 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
       isChecked: checkedRows.some((checkedRow) => checkedRow.id === row.id),
     }));
     setCurrentPageData(pageData);
-  }, [currentPage, rowsPerPage, filteredData, checkedRows]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    filteredData = allData.filter((row) =>
+      row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.category.toLowerCase().includes(searchTerm.toLowerCase())
+    ); 
+  }, [currentPage, rowsPerPage,allData,filteredData, searchTerm, checkedRows]);
 
   // Handle checkbox toggle
   const handleCheckboxChange = (id: number) => {
