@@ -2,8 +2,14 @@
 
 import React, { useState } from 'react';
 import DataTable from '../components/DataTable';
-import BarChart from '../components/BarChart';
 import { TableRow } from '../interface/TableRows';
+import dynamic from 'next/dynamic'
+
+const DynamicComponentWithNoSSR = dynamic(
+  () => import('../components/BarChart'),
+  { ssr: false }
+)
+
 
 const MainContainer: React.FC = () => {
   const [checkedRows, setCheckedRows] = useState<TableRow[]>([]);
@@ -18,7 +24,7 @@ const MainContainer: React.FC = () => {
         <DataTable onCheckboxChange={handleCheckboxChange} />
      </div>
      <div style={{margin:'5rem'}}>
-           <BarChart checkedRows={checkedRows} />
+     <DynamicComponentWithNoSSR checkedRows={checkedRows} />
       </div>
       </>
   );

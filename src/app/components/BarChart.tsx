@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import { TableRow } from '../interface/TableRows';
-import dynamic from "next/dynamic";
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false, })
+import plotly from 'plotly.js';
+import createPlotComponent from 'react-plotly.js/factory';
+const Plot = createPlotComponent(plotly);
 interface BarChartProps {
   checkedRows: TableRow[];
 }
