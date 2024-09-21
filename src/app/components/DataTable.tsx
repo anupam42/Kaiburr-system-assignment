@@ -14,12 +14,12 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [rowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [checkedRows, setCheckedRows] = useState<TableRow[]>([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
   // Fetch initial data and preselect 5 rows
   useEffect(() => {
     const loadData = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       const data = await fetchData(0, 100);
       const initialCheckedData = data.map((row, index) => ({
         ...row,
@@ -29,7 +29,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
       setAllData(initialCheckedData);
       setCurrentPageData(initialCheckedData.slice(0, rowsPerPage));
       setCheckedRows(initialCheckedData.filter((row) => row.isChecked));
-      setLoading(false); // Stop loading
+      setLoading(false);
     };
     loadData();
   }, [rowsPerPage]);
@@ -89,7 +89,6 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
         </div>
         <div style={{ overflowY: 'auto', height: 'calc(100% - 4rem)' }}>
           {loading ? (
-            // Show Skeleton loader while data is being fetched
             <table style={{ width: '100%', tableLayout: 'fixed' }}>
               <thead style={{ position: 'sticky', top: 0, backgroundColor: 'white' }}>
                 <tr>
@@ -115,7 +114,6 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
               </tbody>
             </table>
           ) : (
-            // Show data once loading is finished
             <table style={{ width: '100%', tableLayout: 'fixed' }}>
               <thead style={{ position: 'sticky', top: 0, backgroundColor: 'white' }}>
                 <tr>
