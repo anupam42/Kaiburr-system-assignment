@@ -162,6 +162,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
         </div>
       </div>
 
+      {/*Component relies on browser-only APIs like window, you can disable server-side rendering for that component */}
       <div style={{margin:'5rem'}}>
      <DynamicComponentWithNoSSR checkedRows={checkedRows} />
       </div>
