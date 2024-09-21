@@ -15,7 +15,6 @@ interface DataTableProps {
 
 const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [allData, setAllData] = useState<TableRow[]>([]);
-  const [currentPageData, setCurrentPageData] = useState<TableRow[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,34 +32,22 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
       }));
 
       setAllData(initialCheckedData);
-      setCurrentPageData(initialCheckedData.slice(0, rowsPerPage));
       setCheckedRows(initialCheckedData.filter((row) => row.isChecked));
       setLoading(false);
     };
     loadData();
-  }, [rowsPerPage]);
+  }, []);
 
   // Handle filtered data based on the search term
-  let filteredData = allData.filter((row) =>
+  const filteredData = allData.filter((row) =>
     row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     row.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Handle pagination and maintain checked state
-  useEffect(() => {
-    const startIdx = currentPage * rowsPerPage;
-    const endIdx = startIdx + rowsPerPage;
-    const pageData = filteredData.slice(startIdx, endIdx).map((row) => ({
-      ...row,
-      isChecked: checkedRows.some((checkedRow) => checkedRow.id === row.id),
-    }));
-    setCurrentPageData(pageData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    filteredData = allData.filter((row) =>
-      row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.category.toLowerCase().includes(searchTerm.toLowerCase())
-    ); 
-  }, [currentPage, rowsPerPage,allData,filteredData, searchTerm, checkedRows]);
+  const currentPageData = filteredData.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage).map((row) => ({
+    ...row,
+    isChecked: checkedRows.some((checkedRow) => checkedRow.id === row.id),
+  }));
 
   // Handle checkbox toggle
   const handleCheckboxChange = (id: number) => {
@@ -70,7 +57,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
       }
       return row;
     });
-    setCurrentPageData(updatedData);
+    //setCurrentPageData(updatedData);
 
     // Update the global checkedRows array
     const newCheckedRows = updatedData
@@ -159,7 +146,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', margin:'1.5rem' }}>
           <Pagination
-            count={Math.ceil(filteredData.length / rowsPerPage)} // Total pages
+            count={Math.ceil(filteredData.length / rowsPerPage)}
             page={currentPage + 1}
             onChange={handlePageChange}
             color="primary"
