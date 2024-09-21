@@ -57,7 +57,6 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
       }
       return row;
     });
-    //setCurrentPageData(updatedData);
 
     // Update the global checkedRows array
     const newCheckedRows = updatedData
@@ -71,6 +70,10 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   // Handle page change for Material-UI Pagination
   const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page - 1);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
   };
 
   return (
