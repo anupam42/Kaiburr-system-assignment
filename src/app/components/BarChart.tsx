@@ -14,8 +14,7 @@ const BarChart: React.FC<BarChartProps> = ({ checkedRows }) => {
   const prices = checkedRows.map((row) => row.price);
   const barColors = useMemo(() => {
     return ids.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ids]);
 
   return (
     <Plot
