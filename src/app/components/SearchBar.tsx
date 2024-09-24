@@ -9,7 +9,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearchChange
   return (
     <input
       type="text"
-      placeholder="Search Products..."
+      placeholder="Search Products"
       value={searchTerm}
       onChange={(e) => onSearchChange(e.target.value)}
       className="search-field"
