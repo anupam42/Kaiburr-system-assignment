@@ -15,11 +15,14 @@ bun dev
 ```
 
 install dependencies
+```bash
 npm install
+```
 
 To build
+```bash
 npm run build
-
+```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
