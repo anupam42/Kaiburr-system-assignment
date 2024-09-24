@@ -46,6 +46,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
       row.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  //Updating the current Data
   const currentPageData = filteredData
     .slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage)
     .map((row) => ({
