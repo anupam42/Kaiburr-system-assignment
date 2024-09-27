@@ -15,10 +15,11 @@ const MainContainer: React.FC = () => {
   };
 
   return (
-    <><div>
+    <>
+      <div>
         <DataTable onCheckboxChange={handleCheckboxChange} />
-     </div>
-      </>
+      </div>
+    </>
   );
 };
 
