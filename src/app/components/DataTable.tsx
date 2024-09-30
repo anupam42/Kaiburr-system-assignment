@@ -21,7 +21,9 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [checkedRows, setCheckedRows] = useState<TableRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [fetchedPages, setFetchedPages] = useState<{ [key: number]: boolean }>({});
+  const [fetchedPages, setFetchedPages] = useState<{ [key: number]: boolean }>(
+    {}
+  );
 
   // Fetch initial data and preselect 5 rows
   useEffect(() => {
@@ -100,8 +102,6 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     }
   };
 
-
-
   return (
     <>
       <div
@@ -118,7 +118,13 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
             onSearchChange={(newSearch) => setSearchTerm(newSearch)}
           />
         </div>
-        <div style={{ overflowY: "auto", height: "calc(100% - 4rem)",padding:'.5rem' }}>
+        <div
+          style={{
+            overflowY: "auto",
+            height: "calc(100% - 4rem)",
+            padding: ".5rem",
+          }}
+        >
           {loading ? (
             <table style={{ width: "100%", tableLayout: "fixed" }}>
               <thead
@@ -201,7 +207,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
           }}
         >
           <Pagination
-            count={Math.ceil(filteredData.length ++)}
+            count={Math.ceil(filteredData.length++)}
             page={currentPage + 1}
             onChange={handlePageChange}
             color="primary"
