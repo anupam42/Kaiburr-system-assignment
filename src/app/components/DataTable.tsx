@@ -21,12 +21,13 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [checkedRows, setCheckedRows] = useState<TableRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchedPages, setFetchedPages] = useState<{ [key: number]: boolean }>({});
 
   // Fetch initial data and preselect 5 rows
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      const data = await fetchData(0, 100);
+      const data = await fetchData(0, 5);
       const initialCheckedData = data.map((row, index) => ({
         ...row,
         isChecked: index < 5,
@@ -78,10 +79,28 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page - 1);
     setLoading(true);
-    setTimeout(() => {
+    const offset = page - 1;
+    const pageNumber = page - 1; //storing as reference page for checking pevious fetched data
+
+    //preventing from calling the api if its already fetched
+    if (!fetchedPages[pageNumber]) {
+      const fetchDataAndUpdate = async () => {
+        const data = await fetchData(offset, 5);
+        const updatedData = data.map((row) => ({
+          ...row,
+          isChecked: checkedRows.some((checkedRow) => checkedRow.id === row.id),
+        }));
+        setAllData((prevData) => [...prevData, ...updatedData]);
+        setFetchedPages((prevPages) => ({ ...prevPages, [pageNumber]: true }));
+        setLoading(false);
+      };
+      fetchDataAndUpdate();
+    } else {
       setLoading(false);
-    }, 5000);
+    }
   };
+
+
 
   return (
     <>
@@ -182,7 +201,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
           }}
         >
           <Pagination
-            count={Math.ceil(filteredData.length / rowsPerPage)}
+            count={Math.ceil(filteredData.length ++)}
             page={currentPage + 1}
             onChange={handlePageChange}
             color="primary"
