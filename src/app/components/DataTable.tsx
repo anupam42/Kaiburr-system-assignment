@@ -30,9 +30,8 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [fetchedPages, setFetchedPages] = useState<{ [key: number]: boolean }>(
     {}
   );
-
+  const [maxPagesAllowed, setMaxPagesAllowed] = useState(20);
   const searchTermTrimmed = searchTerm.trim();
-  const maxPagesAllowed = 20;
 
   // Fetch initial data and preselect 5 rows
   useEffect(() => {
@@ -90,7 +89,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
 
   // Handle page change for Material-UI Pagination
   const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
-    if (page > 20) {
+    if (page > maxPagesAllowed) {
       return;
     }
     setCurrentPage(page - 1);
@@ -120,6 +119,12 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const handleSearchChange = (newSearch: React.SetStateAction<string>) => {
     setSearchTerm(newSearch);
     setCurrentPage(0);
+  };
+
+  const handleMaxPagesChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setMaxPagesAllowed(Number(event.target.value));
   };
 
   return (
@@ -243,6 +248,17 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
             size="small"
           />
           <Typography>Page: {currentPage + 1}</Typography>
+          <select
+            value={maxPagesAllowed}
+            onChange={handleMaxPagesChange}
+            style={{ marginLeft: "10px" }}
+          >
+            <option value={20}>20</option>
+            <option value={25}>25</option>
+            <option value={30}>30</option>
+            <option value={35}>35</option>
+            <option value={40}>40</option>
+          </select>
         </div>
       </div>
 
