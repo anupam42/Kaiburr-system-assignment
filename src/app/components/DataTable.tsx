@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { TableRow } from "../interface/TableRows";
 import { fetchData } from "../services/dataService";
-import { Card, CardContent, Pagination, Skeleton, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Pagination,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import dynamic from "next/dynamic";
 import SearchBar from "./SearchBar";
 
@@ -24,40 +30,37 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [fetchedPages, setFetchedPages] = useState<{ [key: number]: boolean }>(
     {}
   );
-  const [originalData, setOriginalData] = useState<TableRow[]>([]);
+
   const searchTermTrimmed = searchTerm.trim();
+  const maxPagesAllowed = 20;
 
   // Fetch initial data and preselect 5 rows
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       const data = await fetchData(0, 5);
-      setOriginalData(data);
       const initialCheckedData = data.map((row, index) => ({
         ...row,
         isChecked: index < 5,
       }));
-  
+
       setAllData(initialCheckedData);
       setCheckedRows(initialCheckedData.filter((row) => row.isChecked));
       setLoading(false);
+      setFetchedPages({ 0: true });
     };
     loadData();
   }, []);
 
-  // Handle filtered data based on the search term
-  const filteredData = allData.filter((row) => {
-    const regex = new RegExp(searchTermTrimmed, 'i');
-    return (
-      regex.test(row.name) ||
-      regex.test(row.category) ||
-      regex.test(row.price.toString()) ||
-      regex.test(row.quantity.toString())
+  const serachData = useMemo(() => {
+    const filteredData = allData.filter((row) =>
+      row.name.includes(searchTermTrimmed)
     );
-  });
+    return filteredData;
+  }, [allData, searchTermTrimmed]);
 
   //Updating the current Data
-  const currentPageData = filteredData
+  const currentPageData = serachData
     .slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage)
     .map((row) => ({
       ...row,
@@ -86,6 +89,9 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
 
   // Handle page change for Material-UI Pagination
   const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
+    if (page > 20) {
+      return;
+    }
     setCurrentPage(page - 1);
     setLoading(true);
     const offset = page - 1;
@@ -109,33 +115,10 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     }
   };
 
-  const loadData = async () => {
-    setLoading(true);
-    const data = await fetchData(0, allData.length);
-    const filteredData = data.filter((row) => {
-      const regex = new RegExp(searchTermTrimmed, 'i');
-      return (
-        regex.test(row.name) ||
-        regex.test(row.category) ||
-        regex.test(row.price.toString()) ||
-        regex.test(row.quantity.toString())
-      );
-    });
-    setAllData(filteredData);
-    setLoading(false);
-  };
-
-  const handleSearchChange = ((newSearch: React.SetStateAction<string>) => {
+  const handleSearchChange = (newSearch: React.SetStateAction<string>) => {
     setSearchTerm(newSearch);
     setCurrentPage(0);
-    setFetchedPages({});
-  
-    if (!newSearch) {
-      setAllData(originalData);
-    } else {
-      loadData();
-    }
-  });
+  };
 
   return (
     <>
@@ -199,7 +182,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
                 ))}
               </tbody>
             </table>
-          ) : filteredData.length > 0 ? (
+          ) : currentPageData.length > 0 ? (
             <table style={{ width: "100%", tableLayout: "fixed" }}>
               <thead
                 style={{ position: "sticky", top: 0, backgroundColor: "white" }}
@@ -242,15 +225,20 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
           style={{
             display: "flex",
             justifyContent: "flex-end",
-            alignItems: 'center',
+            alignItems: "center",
             margin: "-0.7rem 0.1rem",
           }}
         >
           <Pagination
-            count={20}
+            count={
+              Math.ceil(serachData.length / rowsPerPage) < maxPagesAllowed
+                ? Math.ceil(serachData.length / rowsPerPage) + 1
+                : maxPagesAllowed
+            }
             page={currentPage + 1}
             onChange={handlePageChange}
             color="primary"
+            size="small"
           />
           <Typography>Page: {currentPage + 1}</Typography>
         </div>
