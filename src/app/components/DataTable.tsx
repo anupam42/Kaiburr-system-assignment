@@ -248,7 +248,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
           }}
         >
           <Pagination
-            count={Math.ceil(allData.length * 5 / 20)}
+            count={20}
             page={currentPage + 1}
             onChange={handlePageChange}
             color="primary"
