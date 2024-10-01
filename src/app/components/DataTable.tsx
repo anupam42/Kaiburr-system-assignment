@@ -52,6 +52,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     loadData();
   }, []);
 
+  //Search Data
   const serachData = useMemo(() => {
     const filteredData = allData.filter((row) =>
       row.name.includes(searchTermTrimmed)
@@ -115,6 +116,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     }
   };
 
+  //Handle search data
   const handleSearchChange = (newSearch: React.SetStateAction<string>) => {
     setSearchTerm(newSearch);
     setCurrentPage(0);
