@@ -164,7 +164,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
                 ))}
               </tbody>
             </table>
-          ) : (
+          ) : filteredData.length > 0 ? (
             <table style={{ width: "100%", tableLayout: "fixed" }}>
               <thead
                 style={{ position: "sticky", top: 0, backgroundColor: "white" }}
@@ -197,6 +197,10 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
                 ))}
               </tbody>
             </table>
+          ) : (
+            <div style={{ textAlign: "center", padding: "2rem" }}>
+              <h2>No text found</h2>
+            </div>
           )}
         </div>
         <div
