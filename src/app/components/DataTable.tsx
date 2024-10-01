@@ -131,7 +131,6 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     setFetchedPages({});
   
     if (!newSearch) {
-      debugger
       setAllData(originalData);
     } else {
       loadData();
