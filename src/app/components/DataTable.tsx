@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TableRow } from "../interface/TableRows";
 import { fetchData } from "../services/dataService";
-import { Card, CardContent, Pagination, Skeleton } from "@mui/material";
+import { Card, CardContent, debounce, Pagination, Skeleton } from "@mui/material";
 import dynamic from "next/dynamic";
 import SearchBar from "./SearchBar";
 
@@ -24,17 +24,21 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   const [fetchedPages, setFetchedPages] = useState<{ [key: number]: boolean }>(
     {}
   );
+  const [originalData, setOriginalData] = useState<TableRow[]>([]);
+  const debounceTimeout = 200;
+  const searchTermTrimmed = searchTerm.trim();
 
   // Fetch initial data and preselect 5 rows
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       const data = await fetchData(0, 5);
+      setOriginalData(data);
       const initialCheckedData = data.map((row, index) => ({
         ...row,
         isChecked: index < 5,
       }));
-
+  
       setAllData(initialCheckedData);
       setCheckedRows(initialCheckedData.filter((row) => row.isChecked));
       setLoading(false);
@@ -43,11 +47,15 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
   }, []);
 
   // Handle filtered data based on the search term
-  const filteredData = allData.filter(
-    (row) =>
-      row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredData = allData.filter((row) => {
+    const regex = new RegExp(searchTermTrimmed, 'i');
+    return (
+      regex.test(row.name) ||
+      regex.test(row.category) ||
+      regex.test(row.price.toString()) ||
+      regex.test(row.quantity.toString())
+    );
+  });
 
   //Updating the current Data
   const currentPageData = filteredData
@@ -102,6 +110,34 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     }
   };
 
+  const loadData = async () => {
+    setLoading(true);
+    const data = await fetchData(0, allData.length);
+    const filteredData = data.filter((row) => {
+      const regex = new RegExp(searchTermTrimmed, 'i');
+      return (
+        regex.test(row.name) ||
+        regex.test(row.category) ||
+        regex.test(row.price.toString()) ||
+        regex.test(row.quantity.toString())
+      );
+    });
+    setAllData(filteredData);
+    setLoading(false);
+  };
+
+  const handleSearchChange = debounce((newSearch) => {
+    setSearchTerm(newSearch);
+    setCurrentPage(0);
+    setFetchedPages({});
+  
+    if (!newSearch) {
+      setAllData(originalData);
+    } else {
+      loadData();
+    }
+  }, debounceTimeout);
+
   return (
     <>
       <div
@@ -115,7 +151,7 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
         <div style={{ padding: ".5rem", width: "100%" }}>
           <SearchBar
             searchTerm={searchTerm}
-            onSearchChange={(newSearch) => setSearchTerm(newSearch)}
+            onSearchChange={(newSearch) => handleSearchChange(newSearch)}
           />
         </div>
         <div
