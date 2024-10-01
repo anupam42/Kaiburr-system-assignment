@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TableRow } from "../interface/TableRows";
 import { fetchData } from "../services/dataService";
-import { Card, CardContent, debounce, Pagination, Skeleton } from "@mui/material";
+import { Card, CardContent, Pagination, Skeleton, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
 import SearchBar from "./SearchBar";
 
@@ -25,7 +25,6 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     {}
   );
   const [originalData, setOriginalData] = useState<TableRow[]>([]);
-  const debounceTimeout = 200;
   const searchTermTrimmed = searchTerm.trim();
 
   // Fetch initial data and preselect 5 rows
@@ -126,17 +125,18 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
     setLoading(false);
   };
 
-  const handleSearchChange = debounce((newSearch) => {
+  const handleSearchChange = ((newSearch: React.SetStateAction<string>) => {
     setSearchTerm(newSearch);
     setCurrentPage(0);
     setFetchedPages({});
   
     if (!newSearch) {
+      debugger
       setAllData(originalData);
     } else {
       loadData();
     }
-  }, debounceTimeout);
+  });
 
   return (
     <>
@@ -243,15 +243,17 @@ const DataTable: React.FC<DataTableProps> = ({ onCheckboxChange }) => {
           style={{
             display: "flex",
             justifyContent: "flex-end",
+            alignItems: 'center',
             margin: "-0.7rem 0.1rem",
           }}
         >
           <Pagination
-            count={Math.ceil(filteredData.length++)}
+            count={Math.ceil(allData.length * 5 / 20)}
             page={currentPage + 1}
             onChange={handlePageChange}
             color="primary"
           />
+          <Typography>Page: {currentPage + 1}</Typography>
         </div>
       </div>
 
