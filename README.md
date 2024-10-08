@@ -51,5 +51,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ### Issues
 
-* [ ] Search Need to be Refined
-* [ ] Pagination Need to be Improved
+* [x] Search Need to be Refined
+* [x] Pagination Need to be Improved
